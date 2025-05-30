@@ -50,4 +50,3 @@
 ![alt text](image-8.png)
 - This SSH agent plugin was able to resolve the problem as it enables the use of an SSH agent within the Jenkins build
 
-- change
