@@ -1,5 +1,17 @@
 # Jenkins Pipeline
 
+**Author:** Harvinder Tank <br>
+**Date:** 02/06/2025 
+- [Jenkins Pipeline](#jenkins-pipeline)
+  - [Introduction of task](#introduction-of-task)
+  - [Configuration before Job 1](#configuration-before-job-1)
+  - [Job 1](#job-1)
+  - [Job 2](#job-2)
+  - [Job 3](#job-3)
+
+
+
+
 ## Introduction of task
 - Aim to create a pipline via Jenkins to deploy the sparta global app
 - **Job 1** -  Test code using webhook
@@ -10,7 +22,7 @@
 - Need to ensure the public key is on our Github repo 
 ![alt text](image.png)
 
-2. Need to configure the Webhook on Git repository for Jenkins to automatically trigger Jenkins jobs when something happens in your Git repository
+2. Need to configure the Webhook on Git repository for Jenkins to automatically trigger Jenkins jobs when a specific action occurs , in our case it being a push event
 ![alt text](image-1.png)
 - The ```url``` used in the ip address of our Jenkins server 
 
@@ -50,3 +62,36 @@
 ![alt text](image-8.png)
 - This SSH agent plugin was able to resolve the problem as it enables the use of an SSH agent within the Jenkins build
 
+**Fix 2 :** 
+![alt text](image-9.png)
+- Oppose to using SSH shell can use ```git publisher``` plugin
+- This method doesn't require the ```SSH Agent``` plugin
+- Also using this method can remove the ```Merge before build``` pluggin ensuring add branch in the ```add branch``` section 
+
+## Job 3
+- Aim to deploy app into EC2 instance
+- Copy the updated & tested code from Jenkins to the AWS EC2 instance
+
+1. Create a new EC2 intance with appropriate secuirty groups including :
+![alt text](image-10.png)
+- For best practise DON'T make IP range ```0.0.0.0``` instead should allow just Jenkin's IP to SSH
+
+2. On Jenkins ensure correct credentails are inputted to allow SSH access where I provided details for my private key ```tech504-harvi-aws```
+![alt text](image-11.png)
+
+3. In execute shell provided  did a ```scp``` command to copy the code from Jenkins to EC2
+- ```scp ```-  securely copies the entire ```app/``` folder from the Jenkins machine to the ```/home/ubuntu/``` directory on the EC2 instance
+- ```-o StrictHostKeyChecking=no```  - Prevents SSH from prompting for host verification
+
+![alt text](image-12.png)
+
+**BLOCKER :** 
+- Intially the shell wasn't able to carry out the command for npm install and pm2 as I had not installed the required
+- Also had to configure the reverse proxy using ```NGINX``` 
+
+![alt text](image-13.png)
+- Therefore, I needed to ```SSH``` into my EC2 instance and form a script which installed the required packages where after doing this the job was succesful and was able to display the app
+- Also made an edit to the ```index.ejs``` file in the ```views``` folder in the app to specify the time I carried out the test to check the time between pushing the change and it being updated on the app
+
+**OUTPUT :**
+![alt text](image-14.png)
