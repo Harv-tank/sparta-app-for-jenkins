@@ -14,8 +14,14 @@
 
 ## Introduction of task
 - Aim to create a pipline via Jenkins to deploy the sparta global app
+  
+  **Continuous Integration :**
 - **Job 1** -  Test code using webhook
 - **Job 2** -  If tests passed in job 1 it will then trigger Job 2 to then merge changes from dev branch to the main branch
+  
+  **Continuous Deployment :**
+- **Job 3** - After changes have been merged onto the main branch, Jenkins will then run the app on a EC2 instancen with the updated changes
+
 
 ## Configuration before Job 1
 1.  Intially had to form a RSA key pair to allow the SSH access which is needed to merge code onto the main branch
@@ -57,10 +63,11 @@
 **Fix 1 :** 
 ![alt text](image-7.png) 
 - This command ensures it adds a ```git push``` step after the merge so it can be updated on the Github repo
+- This code pushes the current branch (HEAD which is the result of the merge) to the ```main``` branch of the remote origin.
 - **Blocker -** After using this command I ran into another blocker which stated ```git@github.com: Permission denied (publickey). fatal: Could not read from remote repository``` showing it wasn't able to recieve the correct SSH permisions to push the changes
 
 ![alt text](image-8.png)
-- This SSH agent plugin was able to resolve the problem as it enables the use of an SSH agent within the Jenkins build
+- This SSH agent plugin was able to resolve the problem as it enables the use of an SSH agent within the Jenkins build, which allows changes to be made in the repo
 
 **Fix 2 :** 
 ![alt text](image-9.png)
@@ -91,6 +98,12 @@
 
 ![alt text](image-13.png)
 - Therefore, I needed to ```SSH``` into my EC2 instance and form a script which installed the required packages where after doing this the job was succesful and was able to display the app
+- The commands I ran for the packages included:
+- ```sudo apt update -y```
+- ```sudo apt upgrade -y```
+- ```sudo apt install nginx -y```
+- ```sudo npm install pm2@latest -g```
+  
 - Also made an edit to the ```index.ejs``` file in the ```views``` folder in the app to specify the time I carried out the test to check the time between pushing the change and it being updated on the app
 
 **OUTPUT :**
