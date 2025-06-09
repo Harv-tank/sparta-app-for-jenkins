@@ -89,7 +89,8 @@
 3. In execute shell provided  did a ```scp``` command to copy the code from Jenkins to EC2
 - ```scp ```-  securely copies the entire ```app/``` folder from the Jenkins machine to the ```/home/ubuntu/``` directory on the EC2 instance
 - ```-o StrictHostKeyChecking=no```  - Prevents SSH from prompting for host verification
-
+- After ubuntu enter the IP address for the EC2 instance
+  
 ![alt text](image-12.png)
 
 **BLOCKER :** 
